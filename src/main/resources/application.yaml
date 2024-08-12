@@ -1,0 +1,32 @@
+spring.application.name: hackathon
+
+spring.profiles.active: local
+
+spring:
+  config:
+    import:
+      - db-core.yaml
+      - application-secret.yaml
+  web.resources.add-mappings: false
+
+server:
+  tomcat:
+    max-connections: 20000
+    threads:
+      max: 600
+      min-spare: 100
+---
+spring.config.activate.on-profile: local
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-expiry-seconds: ${ACCESS_EXPIRY_SECONDS}
+  refresh-expiry-seconds: ${REFRESH_EXPIRY_SECONDS}
+
+---
+spring.config.activate.on-profile: dev
+
+jwt:
+  secret-key: ${JWT_SECRET_KEY}
+  access-expiry-seconds: ${ACCESS_EXPIRY_SECONDS}
+  refresh-expiry-seconds: ${REFRESH_EXPIRY_SECONDS}

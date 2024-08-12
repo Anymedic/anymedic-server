@@ -1,0 +1,88 @@
+name: CI/CD Pipeline
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ "main" ]
+
+env:
+  DOCKER_REPOSITORY: khtml
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-push-docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # Gradle caching
+      - name: Gradle Caching
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      # Create application-secret.yml
+      - name: Make application-secret.yaml
+        env:
+          APPLICATION_SECRET_PATH: ./src/main/resources
+        run: |
+          mkdir -p $APPLICATION_SECRET_PATH
+          touch $APPLICATION_SECRET_PATH/application-secret.yaml
+          echo "${{ secrets.APPLICATION_SECRET }}" > $APPLICATION_SECRET_PATH/application-secret.yaml
+
+      # Grant execute permission for gradlew
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      # Build with Gradle
+      - name: Build with Gradle
+        run: ./gradlew build -x test
+
+      # Docker Hub 로그인
+      - name: Docker Hub 로그인
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKER_ID }}
+          password: ${{ secrets.DOCKER_PASSWORD }}
+
+      # Docker build & Push
+      - name: Docker build & Push
+        run: |
+          docker build -f Dockerfile -t ${{ secrets.DOCKER_ID }}/${{ env.DOCKER_REPOSITORY }} .
+          docker push ${{ secrets.DOCKER_ID }}/${{ env.DOCKER_REPOSITORY }}
+
+      # Send deploy.sh & docker-compose.yaml
+      - name: Send deploy.sh
+        uses: appleboy/scp-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          port: 22
+          source: "./deploy/*"
+          target: "/home/ubuntu/"
+
+      # Deploy to Dev
+      - name: Deploy to Dev
+        uses: appleboy/ssh-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.EC2_HOST }}
+          key: ${{ secrets.EC2_PRIVATE_KEY }}
+          script: |
+            cd deploy
+            chmod 777 ./deploy.sh
+            ./deploy.sh
+            docker image prune -f
