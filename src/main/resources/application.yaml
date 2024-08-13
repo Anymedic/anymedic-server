@@ -20,9 +20,18 @@ spring:
             temperature: 0.56
     vectorstore:
       azure:
-        index-name: busy-screw-7j0fwz2gtk1
+        index-name: ${AZURE_AI_INDEX_NAME}
         api-key: ${AZURE_AI_SEARCH_API_KEY}
         url: ${AZURE_AI_SEARCH_ENDPOINT}
+        initialize-schema: false
+
+
+azure:
+  ai-search:
+    index-name: ${AZURE_AI_INDEX_NAME}
+    api-key: ${AZURE_AI_SEARCH_API_KEY}
+    url: ${AZURE_AI_SEARCH_ENDPOINT}
+
 
 server:
   tomcat:
