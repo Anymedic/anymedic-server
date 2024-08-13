@@ -33,7 +33,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
-      # Create application-secret.yml
+      # Create application-secret.yaml
       - name: Make application-secret.yaml
         env:
           APPLICATION_SECRET_PATH: ./src/main/resources
@@ -41,6 +41,15 @@ jobs:
           mkdir -p $APPLICATION_SECRET_PATH
           touch $APPLICATION_SECRET_PATH/application-secret.yaml
           echo "${{ secrets.APPLICATION_SECRET }}" > $APPLICATION_SECRET_PATH/application-secret.yaml
+
+      # Create prompt
+      - name: Make prompt.txt
+        env:
+          APPLICATION_SECRET_PATH: ./src/main/resources
+        run: |
+          mkdir -p $APPLICATION_SECRET_PATH
+          touch $APPLICATION_SECRET_PATH/prompt.txt
+          echo "${{ secrets.PROMPT }}" > $APPLICATION_SECRET_PATH/prompt.txt
 
       # Grant execute permission for gradlew
       - name: Grant execute permission for gradlew

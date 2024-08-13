@@ -21,8 +21,10 @@ public class HospitalController {
 
 	@PostMapping("/prompt")
 	public ApiResponse<List<ReasonResponse>> getHospitals(@RequestBody HospitalGetRequest request) {
-		List<ReasonResponse> response = hospitalService.getAppropriateHospitals(request);
-		return ApiResponse.success(response);
+		List<ReasonResponse> reasonsWithoutHospital = hospitalService.getReasonsWithoutHospital(request.prompt());
+		List<ReasonResponse> completeReasons = hospitalService.getCompleteReasons(reasonsWithoutHospital,
+			request.latitude(), request.longitude());
+		return ApiResponse.success(completeReasons);
 	}
 
 }

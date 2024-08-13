@@ -16,6 +16,7 @@ import org.springframework.web.servlet.NoHandlerFoundException;
 
 import dev.khtml.hackathon.support.error.CoreApiException;
 import dev.khtml.hackathon.support.error.ErrorType;
+import dev.khtml.hackathon.support.error.PromptException;
 import dev.khtml.hackathon.support.response.ApiResponse;
 
 @RestControllerAdvice
@@ -36,6 +37,11 @@ public class GlobalExceptionHandler {
 			case WARN -> log.warn("CoreApiException : {}", e.getMessage(), e);
 			default -> log.info("CoreApiException : {}", e.getMessage(), e);
 		}
+		return new ResponseEntity<>(ApiResponse.error(e.getErrorType(), e.getData()), e.getErrorType().getStatus());
+	}
+
+	@ExceptionHandler(PromptException.class)
+	public ResponseEntity<ApiResponse<?>> handlePromptException(PromptException e) {
 		return new ResponseEntity<>(ApiResponse.error(e.getErrorType(), e.getData()), e.getErrorType().getStatus());
 	}
 
