@@ -10,7 +10,7 @@ public final class DetailReason {
 	private final String manage;
 	private final boolean isEmergency;
 	private final String subject;
-	private Hospital hospital;
+	private HospitalResponse hospital;
 
 	public DetailReason(
 		@JsonProperty("description") String description,
@@ -22,6 +22,10 @@ public final class DetailReason {
 		this.manage = manage;
 		this.isEmergency = isEmergency;
 		this.subject = subject;
+	}
+
+	void updateHospital(HospitalResponse hospital) {
+		this.hospital = hospital;
 	}
 
 }
