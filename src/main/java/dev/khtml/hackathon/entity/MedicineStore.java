@@ -29,10 +29,10 @@ public class MedicineStore {
     @Column(name = "road_address")
     private String roadAddress;
 
-    @Column(name = "latitude", precision = 9, scale = 6)
+    @Column(name = "latitude", precision = 13, scale = 10)
     private BigDecimal latitude;
 
-    @Column(name = "longitude", precision = 9, scale = 6)
+    @Column(name = "longitude", precision = 13, scale = 10)
     private BigDecimal longitude;
 
     @Size(max = 255)
