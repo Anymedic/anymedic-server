@@ -5,7 +5,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import dev.khtml.hackathon.dto.MedicineStoreDTO;
+import dev.khtml.hackathon.controller.dto.MedicineStoreDTO;
 
 @Service
 public class LatLonCalculator {

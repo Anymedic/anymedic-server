@@ -1,4 +1,4 @@
-package dev.khtml.hackathon.entity;
+package dev.khtml.hackathon.medicinestore;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;

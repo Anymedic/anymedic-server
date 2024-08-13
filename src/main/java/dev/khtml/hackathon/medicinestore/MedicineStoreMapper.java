@@ -1,12 +1,12 @@
-package dev.khtml.hackathon.support.util;
+package dev.khtml.hackathon.medicinestore;
 
 import java.util.List;
 import java.util.stream.Collectors;
 
+import dev.khtml.hackathon.support.util.LatLonCalculator;
 import org.springframework.stereotype.Component;
 
-import dev.khtml.hackathon.dto.MedicineStoreDTO;
-import dev.khtml.hackathon.entity.MedicineStore;
+import dev.khtml.hackathon.controller.dto.MedicineStoreDTO;
 
 @Component
 public class MedicineStoreMapper {

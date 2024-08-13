@@ -1,6 +1,5 @@
-package dev.khtml.hackathon.dto;
+package dev.khtml.hackathon.controller.dto;
 
-import dev.khtml.hackathon.controller.MedicineStoreController;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

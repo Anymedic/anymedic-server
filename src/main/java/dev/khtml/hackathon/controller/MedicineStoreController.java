@@ -1,7 +1,7 @@
 package dev.khtml.hackathon.controller;
 
-import dev.khtml.hackathon.dto.MedicineStoreDTO;
-import dev.khtml.hackathon.service.MedicineStoreService;
+import dev.khtml.hackathon.controller.dto.MedicineStoreDTO;
+import dev.khtml.hackathon.medicinestore.MedicineStoreRepository;
 import dev.khtml.hackathon.support.response.ApiResponse;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -14,9 +14,9 @@ import java.util.List;
 @RequestMapping("/v1/medicine-stores")
 public class MedicineStoreController {
 
-    private final MedicineStoreService medicineStoreService;
+    private final MedicineStoreRepository.MedicineStoreService medicineStoreService;
 
-    public MedicineStoreController(MedicineStoreService medicineStoreService) {
+    public MedicineStoreController(MedicineStoreRepository.MedicineStoreService medicineStoreService) {
         this.medicineStoreService = medicineStoreService;
     }
 
