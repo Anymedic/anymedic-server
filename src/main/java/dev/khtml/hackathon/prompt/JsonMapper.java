@@ -13,7 +13,7 @@ import lombok.extern.slf4j.Slf4j;
 public class JsonMapper {
 	public static List<ReasonResponse> parseJsonAndMapToReasonResponse(String rawJson) {
 		/// ```json ```	제거
-		String cleanedJson = rawJson.replaceAll("^```json|```$", "").trim();
+		String cleanedJson = rawJson.replaceAll("(?m)^```json|```$|^---|---$", "").trim();
 
 		List<ReasonResponse> cases = new ArrayList<>();
 		try {
