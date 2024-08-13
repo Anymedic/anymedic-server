@@ -2,12 +2,9 @@ package dev.khtml.hackathon.controller;
 
 import java.util.List;
 
-import org.springframework.ai.document.Document;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import dev.khtml.hackathon.controller.dto.request.HospitalGetRequest;
@@ -28,8 +25,4 @@ public class HospitalController {
 		return ApiResponse.success(response);
 	}
 
-	@GetMapping("/search")
-	public List<Document> search(@RequestParam String question) {
-		return null;
-	}
 }
