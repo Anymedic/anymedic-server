@@ -18,20 +18,6 @@ spring:
           options:
             deployment-name: khtml-gpt4o
             temperature: 0.56
-    vectorstore:
-      azure:
-        index-name: ${AZURE_AI_INDEX_NAME}
-        api-key: ${AZURE_AI_SEARCH_API_KEY}
-        url: ${AZURE_AI_SEARCH_ENDPOINT}
-        initialize-schema: false
-
-
-azure:
-  ai-search:
-    index-name: ${AZURE_AI_INDEX_NAME}
-    api-key: ${AZURE_AI_SEARCH_API_KEY}
-    url: ${AZURE_AI_SEARCH_ENDPOINT}
-
 
 server:
   tomcat:
@@ -40,7 +26,6 @@ server:
       max: 600
       min-spare: 100
 
-spring.ai.azure.openai.: ${HELLO}
 ---
 spring.config.activate.on-profile: local
 
