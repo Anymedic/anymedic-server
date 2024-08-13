@@ -11,7 +11,9 @@ import dev.khtml.hackathon.prompt.JsonMapper;
 import dev.khtml.hackathon.prompt.PromptService;
 import dev.khtml.hackathon.support.util.LatLonCalculator;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class HospitalService {
@@ -29,7 +31,7 @@ public class HospitalService {
 
 		try {
 			// 해당 진료과목을 가진 병원 중, 가장 가까운 병원 찾아서 반환
-			return getFilledReasones(parsedReason, currentLatitude, currentLongitude);
+			return getFilledReasons(parsedReason, currentLatitude, currentLongitude);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return parsedReason;
@@ -37,10 +39,12 @@ public class HospitalService {
 	}
 
 	@Transactional(readOnly = true)
-	public List<ReasonResponse> getFilledReasones(List<ReasonResponse> parsedReason, double currentLatitude,
+	public List<ReasonResponse> getFilledReasons(List<ReasonResponse> parsedReason, double currentLatitude,
 		double currentLongitude) {
-		List<ReasonResponse> filledReasones = parsedReason.stream().map(reason -> {
+		log.info(">>>>> Find a nearest hospital. [x,y]: [{},{}]", currentLatitude, currentLongitude);
+		List<ReasonResponse> filledReasons = parsedReason.stream().map(reason -> {
 			MedicalDepartmentEnum departmentEnum = MedicalDepartmentEnum.valueOf(reason.detail().getSubject());
+			log.info(">>>>> department: {}", departmentEnum);
 
 			// 같은 진료과목의 서로다른 병원들
 			double minDistance = Double.MAX_VALUE;
@@ -54,6 +58,7 @@ public class HospitalService {
 					hospital.getLatitude(),
 					hospital.getLongitude());
 				if (distance <= minDistance) {
+					log.info(">>>>> update nearest hospital!!!!: {}", hospital.getName());
 					minDistance = distance;
 					nearestHospital = hospital;
 				}
@@ -64,6 +69,6 @@ public class HospitalService {
 			}
 			return reason;
 		}).toList();
-		return filledReasones;
+		return filledReasons;
 	}
 }
