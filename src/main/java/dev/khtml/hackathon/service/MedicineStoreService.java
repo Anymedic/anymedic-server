@@ -23,7 +23,7 @@ public class MedicineStoreService {
     ) {
         this.latLonCalculator = latLonCalculator;
         this.medicineStoreRepository = medicineStoreRepository;
-        this.medicineStoreMapper = new MedicineStoreMapper();
+        this.medicineStoreMapper = new MedicineStoreMapper(latLonCalculator);
     }
 
     public List<MedicineStoreDTO.MedicineStoreResponse> getNearMedicineStores (Double latitude, Double longitude, Integer radiusMeter) {
@@ -32,12 +32,12 @@ public class MedicineStoreService {
         double minLatitude = latitude - LatLonCalculator.calculateMaxLatDifference(latitude, radiusMeter);
 
         List<MedicineStore> medicineStoreList = medicineStoreRepository.findByLatitudeBetween(minLatitude, maxLatitude);
-        System.out.println("medicineStoreList : " + medicineStoreList);
 
         List<MedicineStoreDTO> nearbyLocations = LatLonCalculator.filterLocationsWithinRadius(medicineStoreMapper.toInfoList(medicineStoreList), latitude, longitude, radiusMeter);
-        System.out.println("nearbyLocations : " + nearbyLocations);
 
-        return medicineStoreMapper.toResponseList(nearbyLocations);
+
+
+        return medicineStoreMapper.toNearMedicineStoreResponseList(latitude, longitude, nearbyLocations);
     }
 
 }

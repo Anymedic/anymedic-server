@@ -25,6 +25,7 @@ public class MedicineStoreDTO {
         private String roadAddress;
         private double latitude;
         private double longitude;
+        private double distance;
     }
 
 }

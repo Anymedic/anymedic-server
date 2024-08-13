@@ -9,21 +9,7 @@ import java.util.List;
 @Service
 public class LatLonCalculator {
     private static final double DEGREE_METER = 111320.0;
-
-    public static double[] calculateLatLonDifference(double latitude, double radius) {
-        double latDifference = radius / DEGREE_METER;
-        double lonDifference = radius / (DEGREE_METER * Math.cos(Math.toRadians(latitude)));
-        return new double[]{latDifference, lonDifference};
-    }
-
-    public static double[][] calculateLatLonRange(double latitude, double longitude, double radius) {
-        double[] differences = calculateLatLonDifference(latitude, radius);
-        double latMin = latitude - differences[0];
-        double latMax = latitude + differences[0];
-        double lonMin = longitude - differences[1];
-        double lonMax = longitude + differences[1];
-        return new double[][]{{latMin, latMax}, {lonMin, lonMax}};
-    }
+    private static final double EARTH_RADIUS = 6371000;
 
     public static double calculateMaxLatDifference(double latitude, double radiusMeter) {
         double latDifference = radiusMeter / DEGREE_METER;
@@ -35,12 +21,7 @@ public class LatLonCalculator {
 
         List<MedicineStoreDTO> finalFilteredLocations = new ArrayList<>();
         for (MedicineStoreDTO location : locations) {
-            System.out.println("location : " + location.getName());
-            System.out.println("location : " + location.getLongitude());
             double lonDifference = calculateLonDifference(latitude, radius);
-            System.out.println("lonDifference : " + lonDifference);
-            System.out.println("diff : " + Math.abs(location.getLongitude() - longitude));
-            System.out.println(Math.abs(location.getLongitude() - longitude) <= lonDifference);
 
             if (Math.abs(location.getLongitude() - longitude) <= lonDifference) {
                 finalFilteredLocations.add(location);
@@ -53,5 +34,23 @@ public class LatLonCalculator {
     private static double calculateLonDifference(double latitude, double radius) {
         return radius / (DEGREE_METER * Math.cos(Math.toRadians(latitude)));
     }
+
+    public static double getDistance(double lat1, double lon1, MedicineStoreDTO location) {
+        double lat2 = location.getLatitude();
+        double lon2 = location.getLongitude();
+        double deltaLat = Math.toRadians(lat2 - lat1);
+        double deltaLon = Math.toRadians(lon2 - lon1);
+
+        double a = Math.sin(deltaLat / 2) * Math.sin(deltaLat / 2) +
+                Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2)) *
+                        Math.sin(deltaLon / 2) * Math.sin(deltaLon / 2);
+
+        double centralAngle = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+        double distance = EARTH_RADIUS * centralAngle;
+
+        return distance;
+    }
+
 
 }

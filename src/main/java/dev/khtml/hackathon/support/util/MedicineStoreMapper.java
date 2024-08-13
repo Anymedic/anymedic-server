@@ -3,11 +3,18 @@ import dev.khtml.hackathon.entity.MedicineStore;
 import dev.khtml.hackathon.dto.MedicineStoreDTO;
 import org.springframework.stereotype.Component;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
 @Component
 public class MedicineStoreMapper {
+
+    private LatLonCalculator latLonCalculator;
+
+    public MedicineStoreMapper(LatLonCalculator latLonCalculator) {
+        this.latLonCalculator = latLonCalculator;
+    }
 
     public MedicineStoreDTO toInfo(MedicineStore medicineStore) {
         return MedicineStoreDTO.builder()
@@ -26,18 +33,24 @@ public class MedicineStoreMapper {
     }
 
 
-    public MedicineStoreDTO.MedicineStoreResponse toResponse(MedicineStoreDTO medicineStore) {
+    public MedicineStoreDTO.MedicineStoreResponse toNearMedicineStoreResponse(double latitude, double longitude, MedicineStoreDTO medicineStore) {
         return MedicineStoreDTO.MedicineStoreResponse.builder()
                 .name(medicineStore.getName())
                 .roadAddress(medicineStore.getRoadAddress())
                 .latitude(medicineStore.getLatitude())
                 .longitude(medicineStore.getLongitude())
+                .distance(latLonCalculator.getDistance(latitude, longitude, medicineStore))
                 .build();
     }
 
-    public List<MedicineStoreDTO.MedicineStoreResponse> toResponseList(List<MedicineStoreDTO> medicineStores) {
-        return medicineStores.stream()
-                .map(this::toResponse)
+    public List<MedicineStoreDTO.MedicineStoreResponse> toNearMedicineStoreResponseList(double latitude, double longitude, List<MedicineStoreDTO> medicineStores) {
+        List<MedicineStoreDTO.MedicineStoreResponse> responses = medicineStores.stream()
+                .map(store -> toNearMedicineStoreResponse(latitude, longitude, store))
                 .collect(Collectors.toList());
+
+        return responses.stream()
+                .sorted((store1, store2) -> Double.compare(store1.getDistance(), store2.getDistance()))
+                .collect(Collectors.toList());
+
     }
 }
