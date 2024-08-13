@@ -9,12 +9,29 @@ spring:
       - application-secret.yaml
   web.resources.add-mappings: false
 
+  ai:
+    azure:
+      openai:
+        api-key: ${AZURE_OPEN_AI_KEY}
+        endpoint: ${AZURE_OPEN_AI_ENDPOINT}
+        chat:
+          options:
+            deployment-name: khtml-gpt4o
+            temperature: 0.56
+    vectorstore:
+      azure:
+        index-name: busy-screw-7j0fwz2gtk1
+        api-key: ${AZURE_AI_SEARCH_API_KEY}
+        url: ${AZURE_AI_SEARCH_ENDPOINT}
+
 server:
   tomcat:
     max-connections: 20000
     threads:
       max: 600
       min-spare: 100
+
+spring.ai.azure.openai.: ${HELLO}
 ---
 spring.config.activate.on-profile: local
 
